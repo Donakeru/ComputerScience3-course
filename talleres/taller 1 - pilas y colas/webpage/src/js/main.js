@@ -15,7 +15,7 @@ class LinkedList {
     }
 
     // Añadir elemento al final de la lista
-    append(data) {
+    _append(data) {
         
         let newNode = new Node(data);
 
@@ -34,7 +34,7 @@ class LinkedList {
     }
 
     // Añaidr elemento al inicio de la lista
-    prepend(data) {
+    _prepend(data) {
 
         let newNode = new Node(data);
 
@@ -54,7 +54,7 @@ class LinkedList {
      *  - begin
      *  - end
      */
-    removeAndReturn(position) {
+    _removeAndReturn(position) {
 
         if (this.head == null) {
             console.error("No se puede remover un elemento de una lista vacía");
@@ -108,33 +108,48 @@ class LinkedList {
 
 }
 
-class Stack {
-    constructor(){}
+class Stack extends LinkedList {
+
+    push(data) {
+        this._prepend(data);
+    }
+
+    pop() {
+        return this._removeAndReturn('begin');
+    }
+
 }
 
-class Queue {
-    constructor(){}
+class Queue extends LinkedList {
+
+    enqueue(data) {
+        this._append(data);
+    }
+
+    dequeue() {
+        return this._removeAndReturn('begin')
+    }
+
 }
 
 // Main
 (() => {
 
-    let linkedList = new LinkedList();
-    linkedList.append("Primero ingresado");
-    linkedList.append("Segundo ingresado");
-    linkedList.prepend("Tercer ingresado");
-    linkedList.append("Cuarto ingresado");
+    const stack = new Stack();
+    stack.push(1);
+    stack.push(2);
+    stack.push(3);
+    console.log('Stack:', stack.toList()); // [3, 2, 1]
+    console.log('pop ->', stack.pop());     // 3 (LIFO)
+    console.log('Stack tras pop:', stack.toList()); // [2, 1]
 
-    console.log(linkedList.toList())
-    console.log(linkedList.removeAndReturn('end'))
-    console.log("----")
+    const queue = new Queue();
+    queue.enqueue('a');
+    queue.enqueue('b');
+    queue.enqueue('c');
+    console.log('Queue:', queue.toList()); // ['a', 'b', 'c']
+    console.log('dequeue ->', queue.dequeue()); // 'a' (FIFO)
+    console.log('Queue tras dequeue:', queue.toList()); // ['b', 'c']
 
-    console.log(linkedList.toList())
-    console.log(linkedList.removeAndReturn('begin'))
-    console.log("----")
-
-    console.log("resultado:")
-    console.log(linkedList.toList())
-    
 })();
 
