@@ -1,155 +1,73 @@
-class Node {
+import { Stack, Queue } from "./dataStructures.js";
 
-    constructor(data) {
-        this.data = data;
-        this.nextNode = null;
-    }
-
+/**
+ * Ejercicio 1 - Equilibrador de símbolos
+ *
+ * Se recorre la cadena carácter a carácter:
+ *  - apertura  -> se apila
+ *  - cierre    -> si la pila está vacía es error;
+ *                 si no, se saca el tope y debe coincidir con el cierre
+ * Si al terminar de recorrer la cadena la pila no quedó vacía, es error.
+ *
+ */
+ 
+const APERTURAS = ['(', '[', '{'];
+const CIERRES = [')', ']', '}'];
+const PARES_CIERRE = {
+    ')' : '(',
+    ']' : '[',
+    '}' : '{',
 }
 
-class LinkedList {
+const validarEquilibrio = (cadenaCaracteres) => {
+    
+    let stack = new Stack();
 
-    constructor() {
-        this.head = null;
-        this.size = 0;
-    }
-
-    // Añadir elemento al final de la lista
-    _append(data) {
+    // Recorrer caracter por caracter
+    for (const char of cadenaCaracteres){
         
-        let newNode = new Node(data);
+        if (APERTURAS.includes(char)) {
+            console.log(`elemento de apertura: ${char}`);
+            stack.push(char);
+            continue;
+        }
 
-        if (this.head == null) {
-            this.head = newNode;
-        } else {
-            let current = this.head;
-            while(current.nextNode !== null) {
-                current = current.nextNode;
+        if (CIERRES.includes(char)) {
+            // primera condicion
+            if (stack.isEmpty()) {
+                console.log(`error: simbolo de cierre con stack vacío`)
+                break;
             }
-            current.nextNode = newNode;
-        }
 
-        this.size++;
-
-    }
-
-    // Añaidr elemento al inicio de la lista
-    _prepend(data) {
-
-        let newNode = new Node(data);
-
-        newNode.nextNode = this.head;
-        this.head = newNode;
-
-        this.size++;
-
-    }
-
-
-    /**
-     * Ubicar, remover y retornar un elemento de la lista
-     * una vez definido la posicion del elemento a retitrar
-     * 
-     * valores esperados:
-     *  - begin
-     *  - end
-     */
-    _removeAndReturn(position) {
-
-        if (this.head == null) {
-            console.error("No se puede remover un elemento de una lista vacía");
-            return null;
-        }
-
-        let value = null;
-        // Caso especifico: lista de un solo elemento
-        if (this.head.nextNode == null) {
-            value = this.head.data;
-            this.head = null;
-        } else if (position == 'end') {
-            let current = this.head;
-            while (current.nextNode && current.nextNode.nextNode) {
-                current = current.nextNode;
+            // segunda condicion
+            let topStack = stack.top()
+            if (topStack == PARES_CIERRE[char]) {
+                stack.pop()
+                console.log('caracter de cierre coincide con el de apretura');
+            } else {
+                console.log('error: No coincide el simbolo de cierre con el último de aperetura');
+                break;
             }
-            value = current.nextNode.data;
-            current.nextNode = null;
-        } else if (position == 'begin') {
-            value = this.head.data;
-            this.head = this.head.nextNode;
-        } else {
-            console.log("Posición invalida");
-            return null;
         }
 
-        this.size--;
-        return value;
     }
 
-    isEmpty() {
-        return (this.head == null)? true : false;
-    }
-
-    length() {
-        return this.size;
-    }
-
-    toList() {
-        
-        let result = [];
-        let current = this.head;
-
-        while(current !== null) {
-            result.push(current.data);
-            current = current.nextNode;
-        }
-
-        return result;
+    if (!stack.isEmpty()) {
+        console.log("no todos los simbolos de apertura han sido cerrados")
     }
 
 }
 
-class Stack extends LinkedList {
+validarEquilibrio("[{()}");
 
-    push(data) {
-        this._prepend(data);
-    }
-
-    pop() {
-        return this._removeAndReturn('begin');
-    }
-
-}
-
-class Queue extends LinkedList {
-
-    enqueue(data) {
-        this._append(data);
-    }
-
-    dequeue() {
-        return this._removeAndReturn('begin')
-    }
-
-}
-
-// Main
-(() => {
-
-    const stack = new Stack();
-    stack.push(1);
-    stack.push(2);
-    stack.push(3);
-    console.log('Stack:', stack.toList()); // [3, 2, 1]
-    console.log('pop ->', stack.pop());     // 3 (LIFO)
-    console.log('Stack tras pop:', stack.toList()); // [2, 1]
-
-    const queue = new Queue();
-    queue.enqueue('a');
-    queue.enqueue('b');
-    queue.enqueue('c');
-    console.log('Queue:', queue.toList()); // ['a', 'b', 'c']
-    console.log('dequeue ->', queue.dequeue()); // 'a' (FIFO)
-    console.log('Queue tras dequeue:', queue.toList()); // ['b', 'c']
-
-})();
-
+/**
+ * Ejercicio 2 - Asignación de tareas
+ *
+ * n tareas con un tiempo de ejecución cada una, y varios procesadores.
+ * Se busca el orden de ejecución que minimiza el tiempo MEDIO de finalización.
+ *
+ * Estrategia: ordenar las tareas de menor a mayor tiempo (así las tareas
+ * cortas terminan antes y no "arrastran" a las demás) y repartirlas metiéndolas
+ * en una Queue propia; cada tarea se asigna al procesador que en ese momento
+ * lleve menos carga acumulada.
+ */
