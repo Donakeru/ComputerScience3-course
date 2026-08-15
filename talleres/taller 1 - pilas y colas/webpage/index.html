@@ -1,12 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Taller Pilas y Colas</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bitácora de ejercicios</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="src/styles/styles.css">
 </head>
 <body>
-    <h1>basicccc</h1>
-    <script type="module" src="src/js/main.js"></script>
+
+<header>
+  <div class="eyebrow">Ciencias de la Computación III</div>
+  <h1>Taller 1</h1>
+  <p class="sub">Rota entre los ejercicios realizados en JavaScript para revisar su funcionamiento.</p>
+</header>
+
+<div class="tabs">
+  <button class="tab active" data-target="ej1"><span class="num">01</span> Equilibrador de Símbolos</button>
+  <button class="tab" data-target="ej2" disabled><span class="num">02</span> Próximamente</button>
+</div>
+
+<div class="panel">
+
+  <div class="view active" id="ej1">
+    <p class="panel-title">Ejercicio 01 — Equilibrador de Símbolos</p>
+    <p class="panel-desc">Ingresa un texto con símbolos (), [] y {} para comprobar si están correctamente equilibrados.</p>
+
+    <div class="entry-row">
+      <input type="text" id="entryInput" placeholder="Ej: ({[]})">
+      <button id="chkbtn">Comprobar</button>
+    </div>
+
+    <div class="card-list" id="cardList">
+      <div class="empty-state" id="emptyState">Haz click en el botón 'Comprobar' para ver el resultado</div>
+    </div>
+  </div>
+
+  <div class="view" id="ej2">
+    <p class="placeholder">Este ejercicio se agregará más adelante</p>
+  </div>
+
+</div>
+
+<footer>Hecho por Samuel Antonio Sanchez y Daniel Alejandro Chavez</footer>
+
+<script src="src/js/script.js" type="module"></script>
+
 </body>
 </html>

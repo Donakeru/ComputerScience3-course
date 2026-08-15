@@ -22,6 +22,7 @@ const PARES_CIERRE = {
 const validarEquilibrio = (cadenaCaracteres) => {
     
     let stack = new Stack();
+    let summary = [];
 
     // Recorrer caracter por caracter
     for (const char of cadenaCaracteres){
@@ -58,8 +59,6 @@ const validarEquilibrio = (cadenaCaracteres) => {
 
 }
 
-validarEquilibrio("[{()}");
-
 /**
  * Ejercicio 2 - Asignación de tareas
  *
@@ -71,3 +70,5 @@ validarEquilibrio("[{()}");
  * en una Queue propia; cada tarea se asigna al procesador que en ese momento
  * lleve menos carga acumulada.
  */
+
+export { validarEquilibrio };
