@@ -1,4 +1,4 @@
-import { validarEquilibrio } from "./core/excercisesSolutions.js";
+import { checkBalance } from "./core/excercisesSolutions.js";
 
 
 // ejercicio 1 interacción GUI
@@ -8,40 +8,41 @@ const cardList = document.getElementById('cardList');
 const emptyState = document.getElementById('emptyState');
 
 // añadir el listener al boton de comprobar y al de input
-chkbtn.addEventListener('click', () => addCard(input.value));
+chkbtn.addEventListener('click', () => checkBalanceInput(input.value));
 input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') addCard(input.value);
+    if (e.key === 'Enter') checkBalanceInput(input.value);
 });
 
-let count = 0;
+function checkBalanceInput(text) {
 
-function addCard(text, status = 'success') {
     if (!text.trim()) return;
 
-    count++;
     emptyState.style.display = 'none';
+    // Esto es para limpiar en cada ejecución y no se acumulen
+    cardList.innerHTML = '';
 
-    const card = document.createElement('div');
-    card.className = `card ${status}`;
-    card.innerHTML = `
-      <div class="card-text">
-        <span class="label">
-          <span class="status-dot"></span>
-          <span class="status-text">${status === 'success' ? 'éxito' : 'error'}</span>
-          · procedimiento #${String(count).padStart(2, '0')}
-        </span>
-        ${text.trim()}
-      </div>
-      <button class="card-remove" title="Eliminar">✕</button>
-    `;
+    let summaryCheckBalance = checkBalance(text);
+    
+    // .entties() devuelve justamente el indice y el dato
+    console.log(summaryCheckBalance);
 
-    card.querySelector('.card-remove').addEventListener('click', () => {
-        card.remove();
-        if (!cardList.querySelector('.card')) emptyState.style.display = 'block';
-    });
+    for (const [index, step] of summaryCheckBalance.entries()) {
 
-    cardList.appendChild(card);
-    input.value = '';
+        const card = document.createElement('div');
+        card.className = `card ${step.status}`;
+        card.innerHTML = `
+            <div class="card-text">
+                <span class="label">
+                <span class="status-dot"></span>
+                <span class="status-text">${step.status === 'success' ? 'éxito' : 'error'}</span>
+                · procedimiento #${String(index).padStart(2, '0')}
+                </span>
+                ${step.msg.trim()}
+            </div>
+        `;
+
+        cardList.appendChild(card);
+    }
     input.focus();
 }
 

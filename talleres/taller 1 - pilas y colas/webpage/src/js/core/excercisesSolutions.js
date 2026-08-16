@@ -19,7 +19,14 @@ const PARES_CIERRE = {
     '}' : '{',
 }
 
-const validarEquilibrio = (cadenaCaracteres) => {
+class BalanceStep {
+    constructor(status, msg) {
+        this.status = status;
+        this.msg = msg;
+    }
+}
+
+const checkBalance = (cadenaCaracteres) => {
     
     let stack = new Stack();
     let summary = [];
@@ -28,7 +35,7 @@ const validarEquilibrio = (cadenaCaracteres) => {
     for (const char of cadenaCaracteres){
         
         if (APERTURAS.includes(char)) {
-            console.log(`elemento de apertura: ${char}`);
+            summary.push(new BalanceStep('success', `detectado elemento de apertura: ${char}`));
             stack.push(char);
             continue;
         }
@@ -36,7 +43,7 @@ const validarEquilibrio = (cadenaCaracteres) => {
         if (CIERRES.includes(char)) {
             // primera condicion
             if (stack.isEmpty()) {
-                console.log(`error: simbolo de cierre con stack vacío`)
+                summary.push(new BalanceStep('error', `error: simbolo de cierre con stack vacío`));
                 break;
             }
 
@@ -44,9 +51,10 @@ const validarEquilibrio = (cadenaCaracteres) => {
             let topStack = stack.top()
             if (topStack == PARES_CIERRE[char]) {
                 stack.pop()
-                console.log('caracter de cierre coincide con el de apretura');
+                summary.push(new BalanceStep('success', `caracter de cierre detectado coincide con el último de apretura: ${char}`));
+                continue;
             } else {
-                console.log('error: No coincide el simbolo de cierre con el último de aperetura');
+                summary.push(new BalanceStep('error', `No coincide el simbolo de cierre con el último de aperetura`));
                 break;
             }
         }
@@ -54,8 +62,10 @@ const validarEquilibrio = (cadenaCaracteres) => {
     }
 
     if (!stack.isEmpty()) {
-        console.log("no todos los simbolos de apertura han sido cerrados")
+        summary.push(new BalanceStep('error', `no todos los simbolos de apertura han sido cerrados`));
     }
+ 
+    return summary;
 
 }
 
@@ -71,4 +81,4 @@ const validarEquilibrio = (cadenaCaracteres) => {
  * lleve menos carga acumulada.
  */
 
-export { validarEquilibrio };
+export { checkBalance };
