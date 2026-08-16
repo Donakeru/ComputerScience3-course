@@ -3,22 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bitácora de ejercicios</title>
+<title>Taller 1 - Ciencias de la Computación III</title>    
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="src/styles/styles.css">
+<link rel="shortcut icon" href="src/imgs/logoo.ico" type="image/x-icon">
 </head>
 <body>
 
 <header>
   <div class="eyebrow">Ciencias de la Computación III</div>
   <h1>Taller 1</h1>
-  <p class="sub">Rota entre los ejercicios realizados en JavaScript para revisar su funcionamiento.</p>
+  <p class="sub"><b>NOTA:</b> Profe, puede cambiar entre ejercicios haciendo click en las pestañas jsajk</p>
 </header>
 
 <div class="tabs">
   <button class="tab active" data-target="ej1"><span class="num">01</span> Equilibrador de Símbolos</button>
-  <button class="tab" data-target="ej2" disabled><span class="num">02</span> Próximamente</button>
+  <button class="tab" data-target="ej2"><span class="num">02</span> Asignación de tareas</button>
 </div>
 
 <div class="panel">
@@ -38,7 +39,27 @@
   </div>
 
   <div class="view" id="ej2">
-    <p class="placeholder">Este ejercicio se agregará más adelante</p>
+    <p class="panel-title">Ejercicio 02 — Asignación de Tareas</p>
+    <p class="panel-desc">Da de alta las tareas con su tiempo de ejecución, define el número de procesadores y planifica el orden que minimiza el tiempo medio de finalización (SPT + reparto round-robin).</p>
+
+    <div class="entry-row">
+      <input type="text" id="taskNameInput" placeholder="Nombre de la tarea (ej: T1)">
+      <input type="number" id="taskTimeInput" class="time-input" placeholder="Tiempo" min="1">
+      <button id="addTaskBtn">Dar de alta</button>
+    </div>
+
+    <div class="card-list" id="taskList">
+      <div class="empty-state" id="taskEmptyState">Aún no hay tareas registradas</div>
+    </div>
+
+    <div class="proc-row">
+      <label for="numProcessorsInput">Procesadores</label>
+      <input type="number" id="numProcessorsInput" min="1" value="2">
+      <button id="processBtn">Procesar</button>
+      <button id="clearTasksBtn" class="secondary">Salir / Limpiar</button>
+    </div>
+
+    <div id="resultArea"></div>
   </div>
 
 </div>

@@ -75,10 +75,115 @@ const checkBalance = (cadenaCaracteres) => {
  * n tareas con un tiempo de ejecución cada una, y varios procesadores.
  * Se busca el orden de ejecución que minimiza el tiempo MEDIO de finalización.
  *
- * Estrategia: ordenar las tareas de menor a mayor tiempo (así las tareas
- * cortas terminan antes y no "arrastran" a las demás) y repartirlas metiéndolas
- * en una Queue propia; cada tarea se asigna al procesador que en ese momento
- * lleve menos carga acumulada.
  */
 
-export { checkBalance };
+class Task {
+    constructor(id, name, time) {
+        this.id = id;
+        this.name = name;
+        this.time = time;
+    }
+}
+
+class Processor {
+    constructor(id) {
+        this.id = id;
+        this.load = 0;
+        this.sequence = new Queue();
+    }
+}
+
+// Recorre una Queue sin vaciarla: saca cada elemento, ejecuta fn(item) y lo
+// vuelve a encolar en el mismo orden.
+const queueForEach = (queue, fn) => {
+
+    const temp = new Queue();
+
+    while (!queue.isEmpty()) {
+        const item = queue.dequeue();
+        fn(item);
+        temp.enqueue(item);
+    }
+
+    while (!temp.isEmpty()) {
+        queue.enqueue(temp.dequeue());
+    }
+}
+
+// Copia el contenido de una Queue en una Queue nueva, sin alterar la original
+const cloneQueue = (queue) => {
+    const clone = new Queue();
+    queueForEach(queue, item => clone.enqueue(item));
+    return clone;
+}
+
+// Selection sort sobre una Queue: en cada vuelta busca el mínimo según keyFn
+// sacando y reencolando elementos, y lo va llevando a una Queue "sorted"
+const sortQueue = (queue, keyFn) => {
+
+    let pending = queue;
+    const sorted = new Queue();
+
+    while (!pending.isEmpty()) {
+
+        const temp = new Queue();
+        let min = pending.dequeue();
+
+        while (!pending.isEmpty()) {
+            const current = pending.dequeue();
+            if (keyFn(current) < keyFn(min)) {
+                temp.enqueue(min);
+                min = current;
+            } else {
+                temp.enqueue(current);
+            }
+        }
+
+        sorted.enqueue(min);
+        pending = temp;
+    }
+
+    return sorted;
+}
+
+// Reparte una Queue de tareas entre n procesadores: SPT (sortQueue por tiempo)
+// + round-robin (rotando una Queue de procesadores)
+const assignTasks = (tasksQueue, numProcessors) => {
+
+    const sortedTasks = sortQueue(cloneQueue(tasksQueue), t => t.time);
+
+    let processorsQueue = new Queue();
+    for (let i = 1; i <= numProcessors; i++) {
+        processorsQueue.enqueue(new Processor(i));
+    }
+
+    while (!sortedTasks.isEmpty()) {
+        const task = sortedTasks.dequeue();
+        const proc = processorsQueue.dequeue();
+
+        proc.load += task.time;
+        proc.sequence.enqueue({ ...task, finish: proc.load });
+
+        processorsQueue.enqueue(proc);
+    }
+
+    // Reordenar los procesadores por id para mostrarlos siempre 1..n
+    const orderedProcessors = sortQueue(processorsQueue, p => p.id);
+
+    let totalFinish = 0;
+    let totalTasks = 0;
+
+    queueForEach(orderedProcessors, proc => {
+        queueForEach(proc.sequence, t => {
+            totalFinish += t.finish;
+            totalTasks++;
+        });
+    });
+
+    const avgCompletion = totalTasks ? totalFinish / totalTasks : 0;
+
+    return { processors: orderedProcessors, avgCompletion };
+
+}
+
+export { checkBalance, Task, assignTasks, queueForEach };
