@@ -1,6 +1,13 @@
 import { checkBalance, Task, assignTasks, queueForEach } from "./core/excercisesSolutions.js";
 import { Queue } from "./core/dataStructures.js";
 
+// marca un input como inválido un instante (borde rojo + sacudida) para dar feedback visual
+function flashInvalid(el) {
+    el.classList.remove('input-error');
+    void el.offsetWidth; // fuerza reflow para poder repetir la animación
+    el.classList.add('input-error');
+    el.addEventListener('animationend', () => el.classList.remove('input-error'), { once: true });
+}
 
 // ejercicio 1 interacción GUI
 const input = document.getElementById('entryInput');
@@ -16,16 +23,29 @@ input.addEventListener('keydown', e => {
 
 function checkBalanceInput(text) {
 
-    if (!text.trim()) return;
+    if (!text.trim()) {
+        flashInvalid(input);
+        return;
+    }
 
     emptyState.style.display = 'none';
     // Esto es para limpiar en cada ejecución y no se acumulen
     cardList.innerHTML = '';
 
     let summaryCheckBalance = checkBalance(text);
-    
+
     // .entties() devuelve justamente el indice y el dato
     console.log(summaryCheckBalance);
+
+    // Banner con el veredicto final, para no tener que leer paso a paso
+    const isBalanced = !summaryCheckBalance.some(step => step.status === 'error');
+    const banner = document.createElement('div');
+    banner.className = `result-banner ${isBalanced ? 'ok' : 'fail'}`;
+    banner.innerHTML = `
+        <span class="icon">${isBalanced ? '✅' : '❌'}</span>
+        <span>${isBalanced ? 'Cadena equilibrada' : 'Cadena NO equilibrada'}</span>
+    `;
+    cardList.appendChild(banner);
 
     for (const [index, step] of summaryCheckBalance.entries()) {
 
@@ -78,6 +98,8 @@ function addTask() {
     const name = taskNameInput.value.trim();
     const time = Number(taskTimeInput.value);
 
+    if (!name) flashInvalid(taskNameInput);
+    if (!time || time <= 0) flashInvalid(taskTimeInput);
     if (!name || !time || time <= 0) return;
 
     tasks.enqueue(new Task(taskIdCounter++, name, time));
@@ -147,12 +169,13 @@ function processTasks() {
     resultArea.innerHTML = '';
 
     if (tasks.isEmpty()) {
-        resultArea.innerHTML = `<div class="empty-state">Agrega al menos una tarea antes de procesar</div>`;
+        resultArea.innerHTML = `<div class="empty-state error">Agrega al menos una tarea antes de procesar</div>`;
         return;
     }
 
     if (!numProcessors || numProcessors <= 0) {
-        resultArea.innerHTML = `<div class="empty-state">Define un número válido de procesadores</div>`;
+        resultArea.innerHTML = `<div class="empty-state error">Define un número válido de procesadores</div>`;
+        flashInvalid(numProcessorsInput);
         return;
     }
 

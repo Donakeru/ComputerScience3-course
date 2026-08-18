@@ -26,7 +26,8 @@
 
   <div class="view active" id="ej1">
     <p class="panel-title">Ejercicio 01 — Equilibrador de Símbolos</p>
-    <p class="panel-desc">Ingresa un texto con símbolos (), [] y {} para comprobar si están correctamente equilibrados.</p>
+    <p class="panel-desc">Ingresa un texto con símbolos de apertura/cierre para comprobar si están correctamente equilibrados, usando una pila.</p>
+    <p class="hint">Símbolos soportados: <code>()</code> <code>[]</code> <code>{}</code></p>
 
     <div class="entry-row">
       <input type="text" id="entryInput" placeholder="Ej: ({[]})">
@@ -40,7 +41,8 @@
 
   <div class="view" id="ej2">
     <p class="panel-title">Ejercicio 02 — Asignación de Tareas</p>
-    <p class="panel-desc">Da de alta las tareas con su tiempo de ejecución, define el número de procesadores y planifica el orden que minimiza el tiempo medio de finalización (SPT + reparto round-robin).</p>
+    <p class="panel-desc">Da de alta las tareas con su tiempo de ejecución, define el número de procesadores y planifica el orden que minimiza el tiempo medio de finalización.</p>
+    <p class="hint">Algoritmo: las tareas se ordenan de menor a mayor tiempo (<code>SPT</code>) y se reparten una a una entre los procesadores por turnos (<code>round-robin</code>).</p>
 
     <div class="entry-row">
       <input type="text" id="taskNameInput" placeholder="Nombre de la tarea (ej: T1)">
