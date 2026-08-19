@@ -60,14 +60,14 @@ Las **operaciones básicas** de las pilas son:
 	- Equilibrado de símbolos
 	- Llamadas a subprogramas
 	- Eliminadas
-#### Ejercicio -  Equilibrador de símbolos
+#### Ejercicio -  Equilibrador de Símbolos
 
 Se van leyendo los caracteres. Cuando se encuentra un elemento clave (paréntesis, corchete) se trata según su tipo:
 - Si es de apertura: se mete en la pila
 - Si es de cierre
 	- Si la si la pila está vacía -> error
 	- Su la pila no está vacía:
-		- Si la cuma es el correspondiente símbolo de apertura se extrae
+		- Si la cima es el correspondiente símbolo de apertura se extrae
 		- Si no lo es -> error
 Si al final la pila no está vacía  -> error
 
